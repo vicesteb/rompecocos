@@ -17,18 +17,18 @@ class Board extends React.Component {
     }
   }
 
-  handleClick(i) {
-    alert('Clicked on square ' + i);
+  handleClick(rowIndex, squareIndex) {
+    alert('Clicked on (' + rowIndex + ', ' + squareIndex + ') with value ' + this.state.squares[rowIndex][squareIndex]);
   }
 
-  renderSquare(i) {
-    return <Square value={i} onClick={() => this.handleClick(i)}/>;
+  renderSquare(rowIndex, squareIndex, squareValue) {
+    return <Square value={squareValue} onClick={() => this.handleClick(rowIndex, squareIndex)}/>;
   }
 
-  renderSquaresRow(squareRow) {
+  renderSquaresRow(squareRow, rowIndex) {
     return (
       <div className="board-row">
-        { squareRow.map(this.renderSquare, this) }
+        { squareRow.map((value, squareIndex) => { return this.renderSquare(rowIndex, squareIndex, value)}, this) }
       </div>
     );
   }

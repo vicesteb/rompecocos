@@ -8,15 +8,17 @@ class Game extends React.Component {
     var i = 0;
 
     this.state = {
-      squares:  Array(4).fill(Array(4)).map((row) => {
+      history: [{
+        squares: Array(4).fill(Array(4)).map((row) => {
           return row.fill(0).map((element) => {
             return i++;
           })
-      }),
+        })
+      }],
       emptySquare: {
           rowIndex: 0,
           squareIndex: 0
-      }      
+      }
     }
   }
 
@@ -49,18 +51,29 @@ class Game extends React.Component {
   }
 
   swapWithEmptySquare(rowIndex, squareIndex) {
+    //alert ('Swap them!');
+    
     this.setState(function(prevState, props) {
-        var newEmptySquare = {
-          rowIndex: rowIndex,
-          squareIndex: squareIndex
-        }
-        prevState.squares[prevState.emptySquare.rowIndex][prevState.emptySquare.squareIndex] = prevState.squares[rowIndex][squareIndex];
-        prevState.squares[rowIndex][squareIndex] = 0;
+      const history = prevState.history;
+      const current = history[history.length -1];
+      const emptySquare = prevState.emptySquare;
 
-        return {
-          squares : prevState.squares,
-          emptySquare: newEmptySquare
-        }
+      const squares = current.squares.map((row) => row.slice());
+
+      var newEmptySquare = {
+        rowIndex: rowIndex,
+        squareIndex: squareIndex
+      }
+
+      squares[emptySquare.rowIndex][emptySquare.squareIndex] = squares[rowIndex][squareIndex];
+      squares[rowIndex][squareIndex] = 0;
+
+      return {
+        history: history.concat([{
+          squares: squares
+        }]),
+        emptySquare: newEmptySquare
+      }
     });
   }
 
@@ -73,14 +86,17 @@ class Game extends React.Component {
   }
 
   render() {
+    const history = this.state.history;
+    const current = history[history.length -1];
+
     return (
       <div className="game">
         <div className="game-board">
-          <Board onClick={(rowIndex, squareIndex) => this.handleClick(rowIndex, squareIndex)} squares={this.state.squares}/>
+          <Board onClick={(rowIndex, squareIndex) => this.handleClick(rowIndex, squareIndex)} squares={current.squares}/>
         </div>
         <div className="game-info">
           <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{/*To do*/}</ol>
         </div>
       </div>
     );

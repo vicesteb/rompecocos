@@ -4,12 +4,12 @@ import Square from './square';
 class Board extends React.Component {
 
   renderSquare(rowIndex, squareIndex, squareValue) {
-    return <Square value={squareValue} onClick={() => this.props.onClick(rowIndex, squareIndex)}/>;
+    return <Square key={rowIndex + squareIndex } value={squareValue} onClick={() => this.props.onClick(rowIndex, squareIndex)}/>;
   }
 
   renderSquaresRow(squareRow, rowIndex) {
     return (
-      <div className="board-row">
+      <div className="board-row" key={squareRow + rowIndex}>
         { squareRow.map((value, squareIndex) => { return this.renderSquare(rowIndex, squareIndex, value)}, this) }
       </div>
     );

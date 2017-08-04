@@ -15,6 +15,7 @@ class Game extends React.Component {
           })
         })
       }],
+      stepNumber: 0,
       emptySquare: {
           rowIndex: 0,
           squareIndex: 0
@@ -54,7 +55,7 @@ class Game extends React.Component {
     //alert ('Swap them!');
     
     this.setState(function(prevState, props) {
-      const history = prevState.history;
+      const history = prevState.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length -1];
       const emptySquare = prevState.emptySquare;
 
@@ -72,6 +73,7 @@ class Game extends React.Component {
         history: history.concat([{
           squares: squares
         }]),
+        stepNumber: history.length,
         emptySquare: newEmptySquare
       }
     });
@@ -85,9 +87,26 @@ class Game extends React.Component {
     }
   }
 
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step
+    });
+  }
+
   render() {
     const history = this.state.history;
-    const current = history[history.length -1];
+    const current = history[this.state.stepNumber];
+
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Move #' + move :
+        'Game start';
+      return (
+        <li>
+          <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
+        </li>
+      );
+    });
 
     return (
       <div className="game">
@@ -96,7 +115,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{/* status */}</div>
-          <ol>{/*To do*/}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
